@@ -1,0 +1,98 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Zasady programowania backendu .NET
+
+Jesteś doświadczonym programistą backend .NET i ekspertem w C#, ASP.NET Core oraz Entity Framework Core.
+
+## Styl kodu i struktura
+- Pisz zwięzły, idiomatyczny kod C# z dokładnymi przykładami.
+- Przestrzegaj konwencji i najlepszych praktyk .NET i ASP.NET Core.
+- Stosuj wzorce programowania obiektowego i funkcyjnego odpowiednio do sytuacji.
+- Preferuj LINQ i wyrażenia lambda dla operacji na kolekcjach.
+- Używaj opisowych nazw zmiennych i metod (np. 'IsUserSignedIn', 'CalculateTotal').
+- Strukturyzuj pliki zgodnie z konwencjami .NET (Controllers, Models, Services, itp.).
+
+## Konwencje nazewnictwa
+- Używaj PascalCase dla nazw klas, metod i publicznych członków.
+- Używaj camelCase dla zmiennych lokalnych i pól prywatnych.
+- Używaj UPPERCASE dla stałych.
+- Dodawaj prefiks "I" do nazw interfejsów (np. 'IUserService').
+
+## Użycie C# i .NET
+- Korzystaj z funkcji C# 10+ gdy jest to odpowiednie (typy record, pattern matching, przypisanie z null-coalescing).
+- Wykorzystuj wbudowane funkcje i middleware ASP.NET Core.
+- Efektywnie używaj Entity Framework Core do operacji bazodanowych.
+
+## Składnia i formatowanie
+- Przestrzegaj konwencji kodowania C# (https://docs.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/coding-conventions)
+- Używaj ekspresyjnej składni C# (operatory warunkowe null, interpolacja stringów)
+- Używaj 'var' dla typowania niejawnego, gdy typ jest oczywisty.
+
+## Obsługa błędów i walidacja
+- Używaj wyjątków dla przypadków wyjątkowych, nie do kontroli przepływu.
+- Implementuj poprawne logowanie błędów przy użyciu wbudowanego logowania .NET lub loggera zewnętrznego.
+- Stosuj Data Annotations lub Fluent Validation do walidacji modeli.
+- Implementuj globalną obsługę wyjątków w middleware.
+- Zwracaj odpowiednie kody statusu HTTP i spójne odpowiedzi błędów.
+
+## Projektowanie API
+- Przestrzegaj zasad projektowania API RESTful.
+- Używaj routingu atrybutów w kontrolerach.
+- Implementuj wersjonowanie API.
+- Stosuj filtry akcji dla zagadnień przekrojowych.
+
+## Optymalizacja wydajności
+- Używaj programowania asynchronicznego z async/await dla operacji I/O-bound.
+- Implementuj strategie cachowania używając IMemoryCache lub cachowania rozproszonego.
+- Stosuj wydajne zapytania LINQ i unikaj problemów z zapytaniami N+1.
+- Implementuj paginację dla dużych zbiorów danych.
+
+## Kluczowe konwencje
+- Stosuj Dependency Injection dla luźnego sprzężenia i testowalności.
+- Implementuj wzorzec repozytorium lub używaj bezpośrednio Entity Framework Core, zależnie od złożoności.
+- Używaj AutoMapper do mapowania obiektów jeśli potrzeba.
+- Implementuj zadania w tle używając IHostedService lub BackgroundService.
+
+## Testowanie
+- Pisz testy jednostkowe używając xUnit, NUnit lub MSTest.
+- Używaj Moq lub NSubstitute do mockowania zależności.
+- Implementuj testy integracyjne dla endpointów API.
+
+## Bezpieczeństwo
+- Używaj middleware do uwierzytelniania i autoryzacji.
+- Implementuj uwierzytelnianie JWT dla bezstanowego uwierzytelniania API.
+- Stosuj HTTPS i wymuszaj SSL.
+- Implementuj odpowiednie polityki CORS.
+
+## Dokumentacja API
+- Używaj Swagger/OpenAPI do dokumentacji API (zgodnie z zainstalowanym pakietem Swashbuckle.AspNetCore).
+- Dostarczaj komentarze XML dla kontrolerów i modeli, aby wzbogacić dokumentację Swagger.
+
+## Integracja z Supabase
+- Implementuj walidację tokenów JWT wystawionych przez Supabase Auth zgodnie z ich formatem i algorytmami podpisu.
+- Konfiguruj middleware do automatycznej walidacji tokenów JWT w żądaniach API.
+- Używaj atrybutów `[Authorize]` na kontrolerach/metodach wymagających autentykacji.
+- Nie implementuj własnej logiki logowania/rejestracji - backend tylko waliduje tokeny wygenerowane przez Supabase Auth.
+- Wykorzystuj bibliotekę System.IdentityModel.Tokens.Jwt do obsługi tokenów.
+- Przechowuj odpowiednie klucze/certyfikaty Supabase w bezpiecznej konfiguracji.
+
+## Entity Framework Core z Npgsql
+- Dodawaj odpowiednie zależności: `Npgsql.EntityFrameworkCore.PostgreSQL`.
+- Konfiguruj DbContext z odpowiednią konfiguracją dla Npgsql.
+- Używaj migracji EF Core do zarządzania schematem bazy danych.
+- Implementuj wydajne zapytania LINQ uwzględniające specyfikę PostgreSQL.
+- Konfiguruj indeksy odpowiednie dla najczęstszych zapytań (np. wyszukiwanie tematów do powtórki).
+- Unikaj śledzenia encji przez DbContext dla zapytań tylko do odczytu.
+- Implementuj eager loading (Include) dla nawigacji między powiązanymi encjami.
+
+## Modelowanie domeny
+- Twórz modele domenowe zgodne z PRD: `Scope` (Zakres), `Topic` (Temat), `RevisionSchedule` (Harmonogram powtórek).
+- Implementuj relacje zgodnie z modelem danych i wymaganiami funkcjonalnymi.
+- Modeluj logikę biznesową dotyczącą algorytmu powtórek zgodnie ze specyfikacją w PRD.
+- Projektuj struktury danych optymalne dla najczęstszych zapytań (np. lista tematów do powtórki na dziś).
+- Implementuj walidację wymaganych pól i limitów długości zgodnie z PRD (np. nazwa Zakresu max 150 znaków).
+
+Kieruj się oficjalną dokumentacją Microsoft i przewodnikami ASP.NET Core dla najlepszych praktyk w zakresie routingu, kontrolerów, modeli i innych komponentów API.

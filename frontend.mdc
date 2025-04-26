@@ -1,0 +1,49 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Zasady rozwoju frontendu - ForgettingCurve
+
+## Technologie podstawowe
+- **Angular 17**: Kompleksowy framework do budowy interaktywnych aplikacji SPA z architekturą opartą na komponentach (w tym Standalone Components)
+- **TypeScript 5**: Statyczne typowanie, poprawa jakości kodu i wsparcie IDE
+- **Angular Material**: Kompleksowa biblioteka komponentów UI zgodnych z Material Design
+
+## Architektura projektu
+- **Single Page Application (SPA)**: Architektura oparta na komponentach
+- **Standalone Components**: Wykorzystanie samodzielnych komponentów wprowadzonych w Angular 17
+- **Integracja z Supabase Auth**: Frontend obsługuje logowanie/rejestrację przez Supabase Auth (`supabase-js`)
+- **Komunikacja z API**: Połączenie z backendem ASP.NET Core poprzez RESTful API
+
+## Konwencje kodowania
+
+### Nazewnictwo plików
+- Wszystkie pliki używają kebab-case
+- Stosuj odpowiednie sufiksy zgodne z konwencjami Angular
+
+### TypeScript
+- Pełne wykorzystanie statycznego typowania oferowanego przez TypeScript 5
+- Definiowanie interfejsów do komunikacji z backendem ASP.NET Core
+- Unikanie typu `any`
+
+## Komponenty Angular
+- Budowa aplikacji w oparciu o architekturę komponentową
+- Wykorzystanie Standalone Components wprowadzonych w Angular 17
+- Zapewnienie interaktywności poprzez właściwe wykorzystanie mechanizmów Angular
+
+### UI/UX
+- Wykorzystanie Angular Material dla responsywnego layoutu
+- Korzystanie z gotowych komponentów Material: przyciski, formularze, tabele, dialogi
+- Zapewnienie spójnego wyglądu całego interfejsu zgodnego z Material Design
+
+### Integracja z backendem
+- Implementacja komunikacji z Supabase Auth
+- Obsługa JWT dla zabezpieczenia API
+- Typowana komunikacja z backendem ASP.NET Core
+
+## Bezpieczeństwo
+- Bezpieczna integracja z Supabase Auth
+- Właściwa obsługa tokenów JWT
+- Ochrona przed typowymi zagrożeniami frontend (XSS, CSRF)
+
