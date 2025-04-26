@@ -1,0 +1,19 @@
+# Node
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+
+# IDE / OS
+.vscode/
+.idea/
+*.DS_Store

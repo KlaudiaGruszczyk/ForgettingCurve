@@ -1,0 +1,6 @@
+@ForgettingCurve.Api_HostAddress = http://localhost:5034
+
+GET {{ForgettingCurve.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
