@@ -3,47 +3,31 @@ description:
 globs: 
 alwaysApply: false
 ---
-# Frontend Development Rules - ForgettingCurve
+## FRONTEND
 
-## Core Technologies
-- **Angular 17**: Comprehensive framework for building interactive SPA applications with component-based architecture (including Standalone Components)
-- **TypeScript 5**: Static typing, code quality improvement, and IDE support
-- **Angular Material**: Comprehensive UI component library compliant with Material Design
+### Guidelines for ANGULAR
 
-## Project Architecture
-- **Single Page Application (SPA)**: Component-based architecture
-- **Standalone Components**: Utilization of standalone components introduced in Angular 17
-- **Supabase Auth Integration**: Frontend handles login/registration through Supabase Auth (`supabase-js`)
-- **API Communication**: Connection with ASP.NET Core backend through RESTful API
+#### ANGULAR_CODING_STANDARDS
 
-## Coding Conventions
+- Use standalone components, directives, and pipes instead of NgModules
+- Implement signals for state management instead of traditional RxJS-based approaches
+- Use the new inject function instead of constructor injection
+- Implement control flow with @if, @for, and @switch instead of *ngIf, *ngFor, etc.
+- Leverage functional guards and resolvers instead of class-based ones
+- Use the new deferrable views for improved loading states
+- Implement OnPush change detection strategy for improved performance
+- Use TypeScript decorators with explicit visibility modifiers (public, private)
+- Leverage Angular CLI for schematics and code generation
+- Implement proper lazy loading with loadComponent and loadChildren
 
-### File Naming
-- All files use kebab-case
-- Use appropriate suffixes following Angular conventions
-
-### TypeScript
-- Full utilization of static typing offered by TypeScript 5
-- Definition of interfaces for communication with ASP.NET Core backend
-- Avoiding the `any` type
-
-## Angular Components
-- Application built on component-based architecture
-- Utilization of Standalone Components introduced in Angular 17
-- Ensuring interactivity through proper use of Angular mechanisms
-
-### UI/UX
-- Using Angular Material for responsive layout
-- Utilizing ready-made Material components: buttons, forms, tables, dialogs
-- Ensuring consistent look of the entire interface compliant with Material Design
-
-### Backend Integration
-- Implementation of communication with Supabase Auth
-- JWT handling for API security
-- Typed communication with ASP.NET Core backend
-
-## Security
-- Secure integration with Supabase Auth
-- Proper handling of JWT tokens
-- Protection against common frontend threats (XSS, CSRF)
-
+#### ANGULAR_MATERIAL
+- Create a dedicated module for Angular Material imports to keep the app module clean
+- Use theme mixins to customize component styles instead of overriding CSS
+- Implement OnPush change detection for performance critical components
+- Leverage the CDK (Component Development Kit) for custom component behaviors
+- Use Material's form field components with reactive forms for consistent validation UX
+- Implement accessibility attributes and ARIA labels for interactive components
+- Use the new Material 3 design system updates where available
+- Leverage the Angular Material theming system for consistent branding
+- Implement proper typography hierarchy using the Material typography system
+- Use Angular Material's built-in a11y features like focus indicators and keyboard navigation
