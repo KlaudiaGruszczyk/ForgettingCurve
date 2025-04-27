@@ -4,16 +4,12 @@
 *   **TypeScript 5:** Zapewnia statyczne typowanie, poprawiając jakość kodu i wsparcie IDE w środowisku Angular.
 *   **Angular Material:** Kompleksowa biblioteka komponentów UI zgodnych z Material Design, zapewniająca responsywny layout, gotowe komponenty (przyciski, formularze, tabele, dialogi) oraz spójny wygląd całego interfejsu.
 
-## Backend - .NET (ASP.NET Core) z wykorzystaniem usług Supabase
+## Backend - .NET (ASP.NET Core)
 
 *   **ASP.NET Core 8:** Wydajny framework .NET do budowy RESTful API obsługujących żądania z frontendu Angular.
-*   **Entity Framework Core + Npgsql:** Standardowy ORM .NET do interakcji (CRUD) z bazą danych PostgreSQL hostowaną na Supabase, używając LINQ i modeli C#.
-*   **Supabase Auth + .NET JWT Validation:** Frontend obsługuje logowanie/rejestrację przez Supabase Auth (`supabase-js`). Backend .NET jedynie waliduje otrzymane tokeny JWT (wystawione przez Supabase) w celu zabezpieczenia API.
-
-## AI - Komunikacja z modelami przez usługę Openrouter.ai
-
-*   **Openrouter.ai:** Backend .NET komunikuje się z tą usługą, aby uzyskać dostęp do różnorodnych modeli AI (OpenAI, Anthropic itp.), optymalizując koszty i wydajność.
-*   **Zarządzanie API Keys & Limits:** Klucze API Openrouter i logika limitów kosztów zarządzane są bezpiecznie po stronie backendu .NET.
+*   **Entity Framework Core + Microsoft SQL Server:** Standardowy ORM .NET do interakcji (CRUD) z bazą danych MS SQL Server, używając LINQ i modeli C#.
+*   **ASP.NET Core Identity:** Wbudowane rozwiązanie do uwierzytelniania i zarządzania użytkownikami w aplikacjach ASP.NET Core.
+*   **SendGrid:** Usługa do wysyłki e-maili, zwłaszcza do potwierdzeń rejestracji, resetowania haseł i powiadomień, zintegrowana przez pakiet SendGrid dla .NET.
 
 ## CI/CD i Hosting
 

@@ -16,7 +16,6 @@ alwaysApply: false
 - Use aggregates to enforce consistency boundaries and transactional integrity
 
 
-
 #### CLEAN_ARCHITECTURE
 
 - Strictly separate code into layers: entities, use cases, interfaces, and frameworks

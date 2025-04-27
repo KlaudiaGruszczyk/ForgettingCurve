@@ -1,135 +1,144 @@
-# Spaced Repetition Planner
+# Forgetting Curve – Review Scheduling App
+
+> A web application to help users manage long-term learning through automated review scheduling based on the Ebbinghaus forgetting curve.
+
+[![Angular Version](https://img.shields.io/badge/Angular-17-blue)](https://angular.io/) [![.NET Version](https://img.shields.io/badge/.NET-8.0-blue)](https://dotnet.microsoft.com/)
 
 ## Table of Contents
-1. [Project Description](#project-description)  
-2. [Tech Stack](#tech-stack)  
-3. [Getting Started Locally](#getting-started-locally)  
-4. [Available Scripts](#available-scripts)  
-5. [Project Scope](#project-scope)  
-6. [Project Status](#project-status)  
-7. [License](#license)  
 
-## Project Description
-Spaced Repetition Planner is a web application that automates the scheduling of review sessions based on the scientifically validated forgetting curve (Ebbinghaus). Users can create **Scopes** (subjects) and **Topics** (units of study), manage their review schedule, and track progress through daily and overdue review panels.
+- [Tech Stack](#tech-stack)
+- [Getting Started Locally](#getting-started-locally)
+  - [Prerequisites](#prerequisites)
+  - [Clone the Repository](#clone-the-repository)
+  - [Backend Setup](#backend-setup)
+  - [Frontend Setup](#frontend-setup)
+- [Available Scripts](#available-scripts)
+  - [Frontend (npm)](#frontend-npm)
+  - [Backend (dotnet)](#backend-dotnet)
+- [Project Scope](#project-scope)
+- [Project Status](#project-status)
+- [License](#license)
 
 ## Tech Stack
-- **Frontend**  
-  - Angular 17  
-  - TypeScript 5  
-  - Angular Material  
 
-- **Backend**  
-  - ASP.NET Core 8  
-  - Entity Framework Core (+ Npgsql)  
-  - Supabase Auth (email verification) + .NET JWT validation  
-
-- **AI Integration**  
-  - Openrouter.ai (communicates with AI models)  
-
-- **CI/CD & Hosting**  
-  - GitHub Actions (build & deploy)  
-  - Docker (DigitalOcean)  
-  - Nginx (serves frontend)  
+- **Frontend**
+  - Angular 17 (Standalone Components)
+  - TypeScript 5
+  - Angular Material
+- **Backend**
+  - ASP.NET Core 8
+  - Entity Framework Core + Microsoft SQL Server
+  - ASP.NET Core Identity
+  - SendGrid (email confirmation)
+- **CI/CD & Hosting**
+  - GitHub Actions (build, Docker image creation)
+  - Docker (frontend served via Nginx; backend in ASP.NET container)
+  - DigitalOcean (Droplets or Kubernetes)
 
 ## Getting Started Locally
 
 ### Prerequisites
-- Node.js (≥18.x) & npm  
-- Angular CLI  
-- .NET SDK 8.0  
-- Docker & Docker Compose (optional, for containerized setup)  
 
-### Installation Steps
-1. Clone the repository and navigate into it:  
+- Node.js (LTS version, e.g. ≥16.x)  
+  _Note: Add a `.nvmrc` if you require a specific version._
+- .NET 8.0 SDK  
+- Microsoft SQL Server (local or remote instance)
+- (Optional) SendGrid API key for email confirmations
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/<your-username>/forgetting-curve.git
+cd forgetting-curve
+```
+
+### Backend Setup
+
+1. Navigate to the API project:
+
    ```bash
-   git clone <repo-url>
-   cd <repo-root>
+   cd src/Server/ForgettingCurve.Api
    ```
 
-2. Configure environment variables:  
-   - Create `.env` in **frontend** directory:
+2. Configure your database connection and SendGrid key:  
+   - Edit `appsettings.Development.json` or set environment variables:  
+     ```bash
+     export ConnectionStrings__DefaultConnection="Server=.;Database=ForgettingCurveDb;Trusted_Connection=True;"
+     export SendGrid__ApiKey="YOUR_SENDGRID_API_KEY"
+     export ASPNETCORE_ENVIRONMENT=Development
      ```
-     VITE_SUPABASE_URL=your_supabase_url
-     VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-     ```
-   - Create `.env` in **backend** directory:
-     ```
-     SUPABASE_URL=your_supabase_url
-     SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-     OPENROUTER_API_KEY=your_openrouter_api_key
-     ```
+3. (If migrations are included) Apply EF Core migrations:
 
-3. Start the **frontend**:
    ```bash
-   cd frontend
-   npm install
-   npm run start
+   dotnet tool install --global dotnet-ef
+   dotnet ef database update
    ```
 
-4. Start the **backend**:
+4. Run the API:
+
    ```bash
-   cd ../backend
-   dotnet restore
    dotnet run
    ```
 
-5. Open your browser at `http://localhost:4200`
+5. Swagger UI will be available at `https://localhost:5001/swagger`
 
-*(Alternatively, use Docker Compose at project root)*  
-```bash
-docker-compose up --build
-```
+### Frontend Setup
+
+1. Open a new terminal, go to the client folder:
+
+   ```bash
+   cd src/ClientApp
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+
+   ```bash
+   npm start
+   ```
+
+4. The application will launch at `http://localhost:4200/`
 
 ## Available Scripts
 
-### Frontend (Angular)
-- `npm run start` — launch in development mode  
-- `npm run build` — build for production  
-- `npm run test` — run unit tests  
-- `npm run lint` — lint codebase  
+### Frontend (npm)
 
-### Backend (.NET)
-- `dotnet run` — start API  
-- `dotnet test` — run unit tests  
-- `dotnet ef migrations add <Name>` — add a new migration  
-- `dotnet ef database update` — apply migrations to database  
+| Command         | Description                                         |
+| --------------- | --------------------------------------------------- |
+| `npm start`     | Runs `ng serve` for local development               |
+| `npm run build` | Builds the app in production mode (`ng build`)      |
+| `npm run watch` | Builds and watches for changes in development mode  |
+| `npm test`      | Runs unit tests via Karma/Jasmine                   |
 
-### Docker
-- `docker-compose up --build` — build & run containers  
-- `docker-compose down` — stop & remove containers  
+### Backend (dotnet)
+
+| Command              | Description                                   |
+| -------------------- | --------------------------------------------- |
+| `dotnet run`         | Runs the ASP.NET Core API                    |
+| `dotnet ef migrations` | (Optional) Manage EF Core migrations        |
+| `dotnet ef database update` | (Optional) Apply migrations to the database |
 
 ## Project Scope
 
-### Included (MVP)
-- **Authentication & Registration**  
-  - Supabase Auth with email verification  
-  - Password policies (min. 8 chars, uppercase, lowercase, digit)  
-- **CRUD for Scopes & Topics**  
-  - Create/Edit/Delete with validation  
-  - Two-step confirmation when deleting a Scope  
-  - Filtering and sorting of Topics (hide/show mastered)  
-- **Automated Review Scheduling**  
-  - Fixed intervals: 1, 3, 7, 14, 30 days  
-  - Recalculation on delayed review  
-  - Post-30-day review decision (continue or mark as mastered)  
-- **“What’s for today?” Panel**  
-  - Aggregates due and overdue reviews  
-  - Overdue items visually highlighted  
-- **Review Tracking**  
-  - Mark as completed / undo last completion  
-- **Mastered Topics**  
-  - Mark/unmark as mastered; hidden from daily panel  
+**MVP Features**  
+- User registration, email verification, login  
+- Private management of learning _Scopes_ and _Topics_  
+- CRUD operations for Scopes and Topics (with validation and confirmations)  
+- Automatic scheduling of reviews at 1, 3, 7, 14, 30 days  
+- Recalculation of future review dates when a review is delayed  
+- Option to continue 30-day reviews or mark a Topic as “Mastered”  
+- Central Review Panel (“What’s due today?”) with overdue highlighting  
+- Mark/unmark reviews and revert last review  
+- Simple, responsive UI with Angular Material  
 
-### Excluded
-- Customizable review algorithm  
-- Data import/export (CSV)  
-- Social or mobile-specific features  
-- Notifications (email, push)  
-- Advanced analytics or gamification  
-- Tagging beyond basic scopes & topics  
+_Functionalities outside MVP (e.g., data export, social features, push notifications) are intentionally excluded._
 
 ## Project Status
-**MVP Phase** — Core features implemented; some modules under active development.
 
-## License
-_This project does not yet have a license. License terms to be determined._
+**MVP in development** – Core flows (registration, scheduling, review management) are implemented.  
+Next steps: database migrations, email service configuration, styling refinements, end-to-end tests.
