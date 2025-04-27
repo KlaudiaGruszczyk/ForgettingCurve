@@ -1,4 +1,4 @@
-﻿using ForgettingCurve.Application.Abstractions;
+using ForgettingCurve.Application.Abstractions;
 using ForgettingCurve.Infrastructure.Persistence;
 using ForgettingCurve.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -25,4 +25,4 @@ public static class InfrastructureRegistration
         
         return services;
     }
-}
+} 
