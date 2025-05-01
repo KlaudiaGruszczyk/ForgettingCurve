@@ -1,6 +1,24 @@
-@ForgettingCurve.Api_HostAddress = http://localhost:5034
+@ForgettingCurve.Api_HostAddress = https://localhost:7173
 
-GET {{ForgettingCurve.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+###
+
+POST {{ForgettingCurve.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "Password123!",
+  "confirmPassword": "Password123!"
+}
+
+###
+
+POST {{ForgettingCurve.Api_HostAddress}}/api/auth/verify-email
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "token": "your-verification-token"
+}
 
 ###

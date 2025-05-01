@@ -9,20 +9,14 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
 {
     public ApplicationDbContext CreateDbContext(string[] args)
     {
-        var basePath = Directory.GetCurrentDirectory();
-        var apiProjectPath = Path.Combine(basePath, "..", "ForgettingCurve.Api");
-        
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(apiProjectPath)
+            .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json")
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development"}.json", optional: true)
             .Build();
 
-        var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+        optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
 
-        builder.UseSqlServer(connectionString);
-
-        return new ApplicationDbContext(builder.Options);
+        return new ApplicationDbContext(optionsBuilder.Options);
     }
 } 

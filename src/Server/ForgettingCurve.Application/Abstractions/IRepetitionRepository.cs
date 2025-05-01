@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ForgettingCurve.Domain.Entities;
 
 namespace ForgettingCurve.Application.Abstractions;
