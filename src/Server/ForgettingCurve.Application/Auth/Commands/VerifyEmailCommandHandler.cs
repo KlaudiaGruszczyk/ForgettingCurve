@@ -18,13 +18,13 @@ public class VerifyEmailCommandHandler : IRequestHandler<VerifyEmailCommand, Uni
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
         {
-            throw new InvalidOperationException("Użytkownik nie został znaleziony");
+            throw new InvalidOperationException("User not found");
         }
 
         var result = await _userManager.ConfirmEmailAsync(user, request.Token);
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException("Nieprawidłowy token weryfikacyjny");
+            throw new InvalidOperationException("Invalid verification token");
         }
 
         user.IsActive = true;

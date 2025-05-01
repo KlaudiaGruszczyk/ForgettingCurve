@@ -1,15 +1,11 @@
 using ForgettingCurve.Application;
 using ForgettingCurve.Infrastructure;
-using Microsoft.AspNetCore.Identity;
-using ForgettingCurve.Domain.Entities;
-using ForgettingCurve.Infrastructure.Persistence;
 using Microsoft.OpenApi.Models;
 using ForgettingCurve.Infrastructure.Email;
 using ForgettingCurve.Application.Common.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -51,7 +47,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Add application services
 builder.Services
     .AddApplication()
     .AddInfrastructureServices(builder.Configuration);
@@ -61,7 +56,6 @@ builder.Services.AddScoped<IEmailService, MailtrapEmailAdapter>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

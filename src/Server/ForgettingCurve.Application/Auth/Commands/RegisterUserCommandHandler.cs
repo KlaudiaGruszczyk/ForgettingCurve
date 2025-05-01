@@ -27,19 +27,17 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, U
 
     public async Task<Unit> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        // Sprawdź czy użytkownik już istnieje
         var existingUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingUser != null)
         {
-            throw new InvalidOperationException("Użytkownik o podanym adresie email już istnieje");
+            throw new InvalidOperationException("User with the provided email already exists");
         }
 
-        // Utwórz nowego użytkownika
         var user = new ApplicationUser
         {
             UserName = request.Email,
             Email = request.Email,
-            IsActive = false // Konto będzie aktywne dopiero po weryfikacji emaila
+            IsActive = false
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
@@ -48,28 +46,25 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, U
             throw new InvalidOperationException(string.Join(", ", result.Errors.Select(e => e.Description)));
         }
 
-        // Generuj token weryfikacyjny
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         
-        // Zapisz token w bazie
         var verificationToken = new EmailVerificationToken
         {
             UserId = user.Id,
             Token = token,
-            ExpiresAt = DateTime.UtcNow.AddDays(1), // Token ważny przez 24 godziny
+            ExpiresAt = DateTime.UtcNow.AddDays(1),
             IsUsed = false
         };
         
         _context.EmailVerificationTokens.Add(verificationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
-        // Wyślij email weryfikacyjny
         var baseUrl = _configuration["AppSettings:BaseUrl"];
-        var subject = "Weryfikacja adresu email";
+        var subject = "Email Verification";
         var htmlContent = $@"
-            <h1>Witaj!</h1>
-            <p>Kliknij poniższy link, aby zweryfikować swój adres email:</p>
-            <a href='{baseUrl}/verify-email?token={token}'>Zweryfikuj email</a>
+            <h1>Hello!</h1>
+            <p>Click the link below to verify your email address:</p>
+            <a href='{baseUrl}/verify-email?token={token}'>Verify Email</a>
         ";
 
         await _emailService.SendEmailAsync(user.Email, subject, htmlContent);

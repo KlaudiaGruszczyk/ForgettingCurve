@@ -42,7 +42,7 @@ public class MailtrapEmailAdapter : IEmailService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Błąd podczas wysyłania emaila do {Email}", toEmail);
+            _logger.LogError(ex, "Error while sending email to {Email}", toEmail);
             throw;
         }
     }

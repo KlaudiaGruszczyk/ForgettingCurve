@@ -37,7 +37,7 @@ public class AuthController : ControllerBase
             return Ok(new RegisterResponse
             {
                 Success = true,
-                Message = "Rejestracja udana. Sprawdź email, aby zweryfikować konto."
+                Message = "Registration successful. Please check your email to verify your account."
             });
         }
         catch (InvalidOperationException ex)
@@ -53,12 +53,12 @@ public class AuthController : ControllerBase
             return BadRequest(new RegisterResponse
             {
                 Success = false,
-                Message = "Wystąpił błąd podczas rejestracji. Spróbuj ponownie."
+                Message = "An error occurred during registration. Please try again."
             });
         }
     }
 
-    [HttpGet("verify-email")]
+    [HttpPost("verify-email")]
     [ProducesResponseType(typeof(VerifyEmailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(VerifyEmailResponse), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> VerifyEmail([FromQuery] string email, [FromQuery] string token)
@@ -76,7 +76,7 @@ public class AuthController : ControllerBase
             return Ok(new VerifyEmailResponse
             {
                 Success = true,
-                Message = "Email został pomyślnie zweryfikowany."
+                Message = "Email has been successfully verified."
             });
         }
         catch (InvalidOperationException ex)
@@ -92,7 +92,7 @@ public class AuthController : ControllerBase
             return BadRequest(new VerifyEmailResponse
             {
                 Success = false,
-                Message = "Wystąpił błąd podczas weryfikacji emaila. Spróbuj ponownie."
+                Message = "An error occurred during email verification. Please try again."
             });
         }
     }

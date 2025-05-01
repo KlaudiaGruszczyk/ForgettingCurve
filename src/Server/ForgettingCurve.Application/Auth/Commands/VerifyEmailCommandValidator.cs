@@ -8,10 +8,10 @@ public class VerifyEmailCommandValidator : AbstractValidator<VerifyEmailCommand>
     public VerifyEmailCommandValidator()
     {
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email jest wymagany")
-            .EmailAddress().WithMessage("Nieprawidłowy format adresu email");
+            .NotEmpty().WithMessage("Email is required")
+            .EmailAddress().WithMessage("Invalid email format");
 
         RuleFor(x => x.Token)
-            .NotEmpty().WithMessage("Token weryfikacyjny jest wymagany");
+            .NotEmpty().WithMessage("Verification token is required");
     }
 } 
