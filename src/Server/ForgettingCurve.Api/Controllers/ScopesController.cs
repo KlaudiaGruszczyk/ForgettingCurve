@@ -4,6 +4,10 @@ using ForgettingCurve.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using MediatR;
+using ForgettingCurve.Application.Commands.Scope;
+using ForgettingCurve.Application.Requests;
+using ForgettingCurve.Application.Responses;
 
 namespace ForgettingCurve.Api.Controllers
 {
@@ -14,11 +18,13 @@ namespace ForgettingCurve.Api.Controllers
     {
         private readonly IScopeRepository _scopeRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
 
-        public ScopesController(IScopeRepository scopeRepository, IUnitOfWork unitOfWork)
+        public ScopesController(IScopeRepository scopeRepository, IUnitOfWork unitOfWork, IMediator mediator)
         {
             _scopeRepository = scopeRepository;
             _unitOfWork = unitOfWork;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -53,8 +59,10 @@ namespace ForgettingCurve.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(Scope), StatusCodes.Status201Created)]
-        public async Task<IActionResult> CreateScope([FromBody] Scope scope)
+        [ProducesResponseType(typeof(ScopeResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> CreateScope([FromBody] CreateScopeRequest request)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             
@@ -63,26 +71,23 @@ namespace ForgettingCurve.Api.Controllers
                 return Unauthorized();
             }
 
-            scope.OwnerUserId = userGuid;
-            scope.CreationDate = DateTime.UtcNow;
+            var command = new CreateScopeCommand
+            {
+                Name = request.Name,
+                UserId = userGuid
+            };
             
-            await _scopeRepository.AddAsync(scope);
-            await _unitOfWork.SaveChangesAsync();
+            var result = await _mediator.Send(command);
             
-            return CreatedAtAction(nameof(GetScope), new { id = scope.Id }, scope);
+            return CreatedAtAction(nameof(GetScope), new { id = result.ScopeId }, result);
         }
 
         [HttpPut("{id}")]
         [RequiresResourceOwnership("id", typeof(IScopeRepository))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateScope(Guid id, [FromBody] Scope scope)
+        public async Task<IActionResult> UpdateScope(Guid id, [FromBody] UpdateScopeRequest request)
         {
-            if (id != scope.Id)
-            {
-                return BadRequest();
-            }
-
             var existingScope = await _scopeRepository.GetByIdAsync(id);
             
             if (existingScope == null)
@@ -90,12 +95,9 @@ namespace ForgettingCurve.Api.Controllers
                 return NotFound();
             }
             
-            // Zachowanie OwnerUserId - nie pozwalamy na zmianę właściciela
-            scope.OwnerUserId = existingScope.OwnerUserId;
-            scope.CreationDate = existingScope.CreationDate;
-            scope.LastModifiedDate = DateTime.UtcNow;
+            existingScope.UpdateName(request.Name);
             
-            _scopeRepository.Update(scope);
+            _scopeRepository.Update(existingScope);
             await _unitOfWork.SaveChangesAsync();
             
             return NoContent();
