@@ -9,7 +9,7 @@
 *   **ASP.NET Core 8:** Wydajny framework .NET do budowy RESTful API obsługujących żądania z frontendu Angular.
 *   **Entity Framework Core + Microsoft SQL Server:** Standardowy ORM .NET do interakcji (CRUD) z bazą danych MS SQL Server, używając LINQ i modeli C#.
 *   **ASP.NET Core Identity:** Wbudowane rozwiązanie do uwierzytelniania i zarządzania użytkownikami w aplikacjach ASP.NET Core.
-*   **SendGrid:** Usługa do wysyłki e-maili, zwłaszcza do potwierdzeń rejestracji, resetowania haseł i powiadomień, zintegrowana przez pakiet SendGrid dla .NET.
+*   **Mailtrap:** Usługa do testowania i debugowania wysyłki e-maili w środowisku deweloperskim, zintegrowana przez standardowy protokół SMTP w .NET.
 
 ## CI/CD i Hosting
 

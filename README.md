@@ -29,7 +29,7 @@
   - ASP.NET Core 8
   - Entity Framework Core + Microsoft SQL Server
   - ASP.NET Core Identity
-  - SendGrid (email confirmation)
+  - Mailtrap (email confirmation)
 - **CI/CD & Hosting**
   - GitHub Actions (build, Docker image creation)
   - Docker (frontend served via Nginx; backend in ASP.NET container)
@@ -43,7 +43,7 @@
   _Note: Add a `.nvmrc` if you require a specific version._
 - .NET 8.0 SDK  
 - Microsoft SQL Server (local or remote instance)
-- (Optional) SendGrid API key for email confirmations
+- (Optional) Mailtrap account for email confirmations
 
 ### Clone the Repository
 
@@ -60,11 +60,12 @@ cd forgetting-curve
    cd src/Server/ForgettingCurve.Api
    ```
 
-2. Configure your database connection and SendGrid key:  
+2. Configure your database connection and Mailtrap credentials:  
    - Edit `appsettings.Development.json` or set environment variables:  
      ```bash
      export ConnectionStrings__DefaultConnection="Server=.;Database=ForgettingCurveDb;Trusted_Connection=True;"
-     export SendGrid__ApiKey="YOUR_SENDGRID_API_KEY"
+     export Mailtrap__Username="YOUR_MAILTRAP_USERNAME"
+     export Mailtrap__Password="YOUR_MAILTRAP_PASSWORD"
      export ASPNETCORE_ENVIRONMENT=Development
      ```
 3. (If migrations are included) Apply EF Core migrations:
@@ -131,8 +132,8 @@ cd forgetting-curve
 - CRUD operations for Scopes and Topics (with validation and confirmations)  
 - Automatic scheduling of reviews at 1, 3, 7, 14, 30 days  
 - Recalculation of future review dates when a review is delayed  
-- Option to continue 30-day reviews or mark a Topic as “Mastered”  
-- Central Review Panel (“What’s due today?”) with overdue highlighting  
+- Option to continue 30-day reviews or mark a Topic as "Mastered"  
+- Central Review Panel ("What's due today?") with overdue highlighting  
 - Mark/unmark reviews and revert last review  
 - Simple, responsive UI with Angular Material  
 
@@ -142,3 +143,7 @@ _Functionalities outside MVP (e.g., data export, social features, push notificat
 
 **MVP in development** – Core flows (registration, scheduling, review management) are implemented.  
 Next steps: database migrations, email service configuration, styling refinements, end-to-end tests.
+
+## License
+
+MIT
