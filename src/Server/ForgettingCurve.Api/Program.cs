@@ -3,8 +3,54 @@ using ForgettingCurve.Infrastructure;
 using Microsoft.OpenApi.Models;
 using ForgettingCurve.Infrastructure.Email;
 using ForgettingCurve.Application.Common.Interfaces;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Konfiguracja Rate Limitingu
+builder.Services.AddRateLimiter(options =>
+{
+    // Domyślne limity dla wszystkich endpointów
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? context.Request.Headers.Host.ToString(),
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 100,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+
+    // Bardziej restrykcyjne limity dla endpointów uwierzytelniania
+    options.AddPolicy("AuthPolicy", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? context.Request.Headers.Host.ToString(),
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(5)
+            }));
+
+    // Obsługa przekroczenia limitu
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/problem+json";
+
+        var problem = new
+        {
+            type = "rate_limit_error",
+            title = "Too many requests",
+            status = 429,
+            detail = "You have exceeded the rate limit. Please try again later.",
+            retryAfter = 60
+        };
+
+        await context.HttpContext.Response.WriteAsJsonAsync(problem, token);
+    };
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -67,6 +113,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

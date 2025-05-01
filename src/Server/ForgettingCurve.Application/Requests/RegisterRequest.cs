@@ -1,8 +1,6 @@
-using MediatR;
+namespace ForgettingCurve.Application.Requests;
 
-namespace ForgettingCurve.Application.Auth.Commands;
-
-public class RegisterUserCommand : IRequest<Unit>
+public class RegisterRequest
 {
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
