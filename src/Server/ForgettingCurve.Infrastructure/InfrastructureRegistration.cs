@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using ForgettingCurve.Application.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,6 @@ using Microsoft.AspNetCore.Identity;
 using ForgettingCurve.Domain.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using ForgettingCurve.Application.Auth;
 using ForgettingCurve.Infrastructure.Authentication;
 
 namespace ForgettingCurve.Infrastructure;
@@ -23,6 +23,12 @@ public static class InfrastructureRegistration
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+        
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<IScopeRepository, Persistence.Repositories.ScopeRepository>();
+        services.AddScoped<ITopicRepository, Persistence.Repositories.TopicRepository>();
+        services.AddScoped<IRepetitionRepository, Persistence.Repositories.RepetitionRepository>();
 
         services.AddScoped<IApplicationDbContext>(provider => 
             provider.GetRequiredService<ApplicationDbContext>());
@@ -34,30 +40,25 @@ public static class InfrastructureRegistration
 
         services.Configure<IdentityOptions>(options =>
         {
-            // Account settings
             options.SignIn.RequireConfirmedAccount = true;
 
-            // Password settings
             options.Password.RequireDigit = true;
             options.Password.RequireLowercase = true;
             options.Password.RequireUppercase = true;
             options.Password.RequireNonAlphanumeric = true;
             options.Password.RequiredLength = 8;
 
-            // Lockout settings
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.AllowedForNewUsers = true;
         });
 
-        // Configure JWT
         var jwtSettings = configuration.GetSection("JwtSettings");
         services.Configure<JwtSettings>(jwtSettings);
         
-        // Register JWT token generator
-        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<ForgettingCurve.Application.Auth.IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<ForgettingCurve.Application.Abstractions.IJwtTokenGenerator, JwtTokenGenerator>();
         
-        // Add JWT authentication
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -74,7 +75,7 @@ public static class InfrastructureRegistration
                 ValidIssuer = jwtSettings["Issuer"],
                 ValidAudience = jwtSettings["Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(jwtSettings["Secret"]))
+                    Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new InvalidOperationException("JWT Key is not configured.")))
             };
         });
 

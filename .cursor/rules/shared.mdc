@@ -8,3 +8,5 @@ alwaysApply: true
 
 #### Shared
 - all exceptions and comments should be in english
+- Commands, CommandHandler and Validators should be in Commands folder (Apllication Layer)
+- Exceptions should be in Exceptions folder (Domain Layer)

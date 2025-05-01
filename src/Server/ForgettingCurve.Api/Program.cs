@@ -5,13 +5,17 @@ using ForgettingCurve.Infrastructure.Email;
 using ForgettingCurve.Application.Common.Interfaces;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using ForgettingCurve.Infrastructure.Authentication;
+using ForgettingCurve.Api.Filters;
+using ForgettingCurve.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Konfiguracja Rate Limitingu
 builder.Services.AddRateLimiter(options =>
 {
-    // Domyślne limity dla wszystkich endpointów
     options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
         RateLimitPartition.GetFixedWindowLimiter(
             partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? context.Request.Headers.Host.ToString(),
@@ -22,7 +26,6 @@ builder.Services.AddRateLimiter(options =>
                 Window = TimeSpan.FromMinutes(1)
             }));
 
-    // Bardziej restrykcyjne limity dla endpointów uwierzytelniania
     options.AddPolicy("AuthPolicy", context =>
         RateLimitPartition.GetFixedWindowLimiter(
             partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? context.Request.Headers.Host.ToString(),
@@ -52,7 +55,11 @@ builder.Services.AddRateLimiter(options =>
     };
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{ 
+    options.Filters.Add<ResourceOwnershipFilter>();
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -111,6 +118,9 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty;
     });
 }
+
+// Dodanie middleware obsługi błędów - musi być na początku pipeline'u
+app.UseErrorHandling();
 
 app.UseHttpsRedirection();
 app.UseRateLimiter();

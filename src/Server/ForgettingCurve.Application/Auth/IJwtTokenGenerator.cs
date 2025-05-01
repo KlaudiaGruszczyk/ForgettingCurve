@@ -1,6 +1,6 @@
+using ForgettingCurve.Domain.Entities;
 using System;
 using System.Threading.Tasks;
-using ForgettingCurve.Domain.Entities;
 
 namespace ForgettingCurve.Application.Auth
 {

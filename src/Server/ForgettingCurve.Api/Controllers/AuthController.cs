@@ -143,7 +143,7 @@ public class AuthController : ControllerBase
             
             return Ok(result);
         }
-        catch (ValidationException ex)
+        catch (FluentValidation.ValidationException ex)
         {
             var problemDetails = new ValidationProblemDetails
             {
