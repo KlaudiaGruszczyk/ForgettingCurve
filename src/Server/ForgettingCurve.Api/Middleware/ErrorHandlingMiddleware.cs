@@ -40,7 +40,6 @@ namespace ForgettingCurve.Api.Middleware
                 detail = "An unexpected error occurred. Please try again later."
             };
 
-            // Obsługa różnych typów wyjątków
             if (exception is UnauthorizedAccessException)
             {
                 code = HttpStatusCode.Unauthorized;
@@ -85,6 +84,17 @@ namespace ForgettingCurve.Api.Middleware
                     detail = exception.Message
                 };
             }
+            else if (exception is DomainException)
+            {
+                code = HttpStatusCode.BadRequest;
+                problem = new
+                {
+                    type = "domain_error",
+                    title = "Domain rule violation",
+                    status = (int)code,
+                    detail = exception.Message
+                };
+            }
 
             context.Response.ContentType = "application/problem+json";
             context.Response.StatusCode = (int)code;
@@ -99,7 +109,6 @@ namespace ForgettingCurve.Api.Middleware
         }
     }
 
-    // Extension method to register the middleware
     public static class ErrorHandlingMiddlewareExtensions
     {
         public static IApplicationBuilder UseErrorHandling(this IApplicationBuilder builder)
