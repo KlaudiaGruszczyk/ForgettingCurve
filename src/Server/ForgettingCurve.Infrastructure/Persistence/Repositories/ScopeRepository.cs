@@ -34,4 +34,10 @@ public class ScopeRepository : Repository<Scope>, IScopeRepository
         return await Context.Scopes
             .AnyAsync(s => s.Id == scopeId && s.OwnerUserId == userId);
     }
+    
+    public async Task<bool> IsOwnerAsync(Guid resourceId, Guid userId)
+    {
+        var scope = await DbSet.FindAsync(resourceId);
+        return scope != null && scope.OwnerUserId == userId;
+    }
 } 

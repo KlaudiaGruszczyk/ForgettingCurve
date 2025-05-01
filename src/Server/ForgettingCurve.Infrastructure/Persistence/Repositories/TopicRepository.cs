@@ -48,4 +48,18 @@ public class TopicRepository : Repository<Topic>, ITopicRepository
             .Include(t => t.Repetitions.Where(r => r.CompletedDate == null))
             .ToListAsync();
     }
+    
+    public async Task<bool> IsOwnerAsync(Guid resourceId, Guid userId)
+    {
+        var topic = await DbSet.FindAsync(resourceId);
+        return topic != null && topic.OwnerUserId == userId;
+    }
+
+    public async Task<IEnumerable<Topic>> GetTopicsByScopeIdAsync(Guid scopeId)
+    {
+        return await Context.Topics
+            .Where(t => t.ScopeId == scopeId)
+            .OrderByDescending(t => t.CreationDate)
+            .ToListAsync();
+    }
 } 
