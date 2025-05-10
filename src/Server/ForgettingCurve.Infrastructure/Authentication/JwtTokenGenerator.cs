@@ -41,7 +41,7 @@ namespace ForgettingCurve.Infrastructure.Authentication
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             
-            var expiresAt = DateTime.UtcNow.AddHours(1);
+            var expiresAt = DateTime.UtcNow.AddSeconds(_jwtSettings.ExpiryTimeInSeconds);
             
             var token = new JwtSecurityToken(
                 issuer: _jwtSettings.Issuer,
